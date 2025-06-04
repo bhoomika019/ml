@@ -1,0 +1,42 @@
+import pandas as pd
+
+# Step 1: Create a small dataset
+data = {
+    "Sky": ["Sunny", "Sunny", "Rainy", "Sunny"],
+    "AirTemp": ["Warm", "Warm", "Cold", "Warm"],
+    "Humidity": ["Normal", "High", "High", "High"],
+    "Wind": ["Strong", "Strong", "Strong", "Strong"],
+    "Water": ["Warm", "Warm", "Warm", "Cool"],
+    "Forecast": ["Same", "Same", "Change", "Change"],
+    "PlayTennis": ["Yes", "Yes", "No", "Yes"]
+}
+
+# Step 2: Save the data to a CSV file
+df = pd.DataFrame(data)
+df.to_csv("training-data.csv", index=False)
+print("✅ CSV file 'training-data.csv' saved.")
+
+# Step 3: Define the Find-S algorithm
+def find_s_algorithm(data):
+    features = data.iloc[:, :-1].values  # All columns except last
+    labels = data.iloc[:, -1].values     # Only the last column
+    hypothesis = None
+
+    for i, label in enumerate(labels):
+        if label == "Yes":  # Only consider positive examples
+            if hypothesis is None:
+                hypothesis = features[i].copy()  # First positive example
+            else:
+                for j in range(len(hypothesis)):
+                    if hypothesis[j] != features[i][j]:
+                        hypothesis[j] = "?"  # Generalize
+            print(f"After example {i+1}: {hypothesis}")
+    return hypothesis
+
+# Step 4: Load CSV and apply the algorithm
+df = pd.read_csv("training-data.csv")
+final_hypothesis = find_s_algorithm(df)
+
+# Step 5: Show final result
+print("\n✅ Final Hypothesis:")
+print(f"h = <{', '.join(final_hypothesis)}>")
