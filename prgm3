@@ -1,0 +1,26 @@
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+
+# Load dataset as df (Bunch object)
+df = load_iris()
+X = df.data
+y = df.target
+labels = df.target_names
+
+# Apply PCA
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X)
+
+# Plot
+plt.figure(figsize=(8,6))
+for i, label in enumerate(labels):
+    plt.scatter(X_pca[y == i, 0], X_pca[y == i, 1], label=label)
+
+plt.title('PCA on Iris Dataset')
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.legend()
+plt.grid(True)
+plt.show()
