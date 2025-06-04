@@ -1,0 +1,29 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.datasets import fetch_california_housing
+# Load dataset
+df = fetch_california_housing(as_frame=True).frame
+# Show sample and summary
+print("Dataset Sample:\n", df.head())
+print("\nSummary Statistics:\n", df.describe())
+# Histograms
+df.hist(figsize=(12, 10), bins=30, color='skyblue', edgecolor='black')
+plt.suptitle('Histograms of All Features', fontsize=16)
+plt.tight_layout(rect=[0, 0, 1, 0.97])
+plt.show()
+# Boxplots
+plt.figure(figsize=(14, 10))
+for i, col in enumerate(df.columns, 1):
+    plt.subplot(3, 3, i)
+    sns.boxplot(y=df[col], color='skyblue')
+    plt.title(f"{col} Boxplot")
+plt.tight_layout()
+plt.show()
+# Outlier counts using IQR
+print("\nOutlier Counts:")
+for col in df.columns:
+    q1, q3 = df[col].quantile([0.25, 0.75])
+    iqr = q3 - q1
+    outliers = df[(df[col] < q1 - 1.5 * iqr) | (df[col] > q3 + 1.5 * iqr)]
+    print(f"{col}: {len(outliers)} outliers")
