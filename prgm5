@@ -1,0 +1,30 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.neighbors import KNeighborsClassifier
+
+# Generate 100 random values in [0, 1]
+np.random.seed(42)
+x = np.random.rand(100).reshape(-1, 1)
+
+# Label first 50 values: Class 1 if ≤ 0.5, else Class 2 (as 1D array)
+y_train = np.where(x[:50] <= 0.5, 1, 2).ravel()  # 👈 this line fixes the warning
+
+# Test different k values
+for k in [1, 2, 3, 4, 5, 20, 30]:
+    model = KNeighborsClassifier(n_neighbors=k)
+    model.fit(x[:50], y_train)
+
+    y_pred = model.predict(x[50:])
+
+    # Plot
+    plt.figure(figsize=(8, 4))
+    plt.scatter(x[:50], y_train, color='blue', label='Training')
+    plt.scatter(x[50:], y_pred, color='red', label='Predicted')
+    plt.title(f'KNN (k={k})')
+    plt.xlabel('X')
+    plt.ylabel('Class')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+    print(f'🔹 Predicted labels for k={k}:\n{y_pred}\n')
